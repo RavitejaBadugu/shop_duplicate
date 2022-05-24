@@ -1,0 +1,7 @@
+train_images/
+test_images/
+sample_data/
+sample_submission.csv
+shopee-product-matching.zip
+*.csv
+.config/

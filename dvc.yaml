@@ -1,0 +1,47 @@
+vars:
+- params.yaml
+stages:
+ eda:
+  cmd: python EDA.py --data_path ${data.initial_file} --check_sizes True
+  params:
+  - ${data.initial_file}
+  deps:
+  - EDA.py
+  outs:
+  - processed_data/cleaned_data.csv
+  plots:
+  - plots/weigth_distributions.jpg:
+      cache: false
+  - plots/height_distributions.jpg:
+      cache: false
+  - plots/random_images.jpg:
+      cache: false
+ Folds:
+  cmd: python create_fold.py --data_path "processed_data/cleaned_data.csv"
+  deps:
+  - create_fold.py
+  - processed_data/cleaned_data.csv
+  outs:
+  - encoders/label_group_encoder.pkl
+  - processed_data/fold_data.csv
+ training:
+  cmd: >
+  python training.py --data_path processed_data/fold_data.csv --model_type ${model_type} \
+  --batch_size 32 --save_model_path "models_dir/image_test" --epochs 30 --lr_callback ${scheduler}
+  deps:
+  - training.py
+  - processed_data/fold_data.csv
+  - utils/models/py
+  - utils/dataloaders/py
+  outs:
+  - "models_dir/image_test-0.h5"
+  - "models_dir/image_test-1.h5"
+  - "models_dir/image_test-2.h5"
+  - "models_dir/image_test-3.h5"
+  - "models_dir/image_test-4.h5"
+  params:
+  - ${scheduler}
+  - ${model_type}
+  - ${image.unfreeze}
+  - ${image.pretrained_name}
+  - ${text.pretrained_name}
