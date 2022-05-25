@@ -5,37 +5,37 @@ stages:
     deps:
     - path: EDA.py
       md5: 7858651b972379b3bd5c5cbf72431366
-      size: 1769
+      size: 1719
     params:
       params.yaml:
         data:
           initial_file: train.csv
     outs:
     - path: plots/height_distributions.jpg
-      md5: b20c8e2a2c2738c4416c3c50dcfbd20d
-      size: 43448
+      md5: 7fce268791eed5ac8047e7220d499b41
+      size: 55125
     - path: plots/random_images.jpg
-      md5: 9a1985cf46b8d08a9f98c1d36a6e0ee4
-      size: 552307
+      md5: 631a1e9da24c200ab05a9817ade07c52
+      size: 1082233
     - path: plots/weigth_distributions.jpg
-      md5: c528b6dac33e5ffddf227a9859ffaa8d
-      size: 43515
+      md5: fff49aed0a0b417d245a165c77e96fc2
+      size: 55195
     - path: processed_data/cleaned_data.csv
       md5: f7b791d5223c7af6945b6e6408171937
-      size: 6498886
+      size: 6464635
   Folds:
     cmd: python create_fold.py --data_path "processed_data/cleaned_data.csv"
     deps:
     - path: create_fold.py
       md5: c7b91509def1194c68b28b5e272da77a
-      size: 1326
+      size: 1290
     - path: processed_data/cleaned_data.csv
       md5: f7b791d5223c7af6945b6e6408171937
-      size: 6498886
+      size: 6464635
     outs:
     - path: encoders/label_group_encoder.pkl
-      md5: 30c274c5252e03579b15b9d1e440e19c
-      size: 88364
+      md5: 65da2c1b1ba8bd133903c883ed8c542d
+      size: 88366
     - path: processed_data/fold_data.csv
       md5: 4f2a09483c44118a48970440e6bb85cb
-      size: 6370622
+      size: 6336371

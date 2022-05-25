@@ -6,5 +6,6 @@ shopee-product-matching.zip
 *.csv
 .config/
 __*__
-.dvc
+!.dvc
 processed_data/*
+models_dir

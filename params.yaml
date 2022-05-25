@@ -2,7 +2,7 @@ data:
   initial_file: train.csv
 model_type: "image"
 image:
- image_size: (512,512)
+ image_size: (256,256)
  unfreeze: "324"
  pre_trained_name: "EfficientNetB4"
 text:

@@ -5,6 +5,7 @@ It is the training function for different types of models
 
 import argparse
 import pathlib
+from tabnanny import verbose
 import pandas as pd
 import tensorflow as tf
 from utils.models import *
@@ -70,10 +71,10 @@ def TRAINING(args):
     reduce_plat=tf.keras.callbacks.ReduceLROnPlateau(monitor="val_loss",mode="min",
                                                     patience=5,verbose=1,cooldown=2,
                                                     min_lr=1e-6)
-    early=tf.keras.callbacks.EarlyStopping(monitor="val_loss",mode="min",verbose=1)
+    early=tf.keras.callbacks.EarlyStopping(monitor="val_loss",mode="min",verbose=1,patience=10)
     saver=tf.keras.callbacks.ModelCheckpoint(filepath=args.save_model_path+f"{fold}.h5",
                                              monitor="val_loss",mode="min",save_best_only=True,
-                                             save_weights_only=True)
+                                             save_weights_only=True,verbose=1)
     if fold==0:
       print(model.summary())
     model.fit(train_dataloader,validation_data=test_dataloader,epochs=args.epochs,
