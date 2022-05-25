@@ -106,7 +106,7 @@ def COMBINE_MODEL(max_length,image_size,unfreeze_layers_number):
     hidden_layers.append(text_outputs['hidden_states'][-i])
   x1=tf.keras.layers.Concatenate()(hidden_layers)[:,0,:]
   ################
-  img_trained=DenseNet201(include_top=False,weights="imagenet",input_shape=(image_size[0],image_size[1],3))
+  img_trained=EfficientNetB4(include_top=False,weights="imagenet",input_shape=(image_size[0],image_size[1],3))
   for i,layer in enumerate(img_trained.layers):
     if i>=unfreeze_layers_number:
       if not layer.name.endswith("bn"):

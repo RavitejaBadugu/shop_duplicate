@@ -2,11 +2,12 @@ vars:
 - params.yaml
 stages:
  eda:
-  cmd: python EDA.py --data_path ${data.initial_file} --check_sizes True
+  cmd: python EDA.py --data_path train.csv --check_sizes True
   params:
-  - ${data.initial_file}
+  - train.csv
   deps:
   - EDA.py
+  - train.csv
   outs:
   - processed_data/cleaned_data.csv
   plots:
@@ -25,9 +26,9 @@ stages:
   - encoders/label_group_encoder.pkl
   - processed_data/fold_data.csv
  training:
-  cmd: >
-  python training.py --data_path processed_data/fold_data.csv --model_type ${model_type} \
-  --batch_size 32 --save_model_path "models_dir/image_test" --epochs 30 --lr_callback ${scheduler}
+  cmd: >-
+    python training.py --data_path processed_data/fold_data.csv --model_type ${model_type} \
+    --batch_size 32 --save_model_path "models_dir/image_test" --epochs 30 --lr_callback ${scheduler}
   deps:
   - training.py
   - processed_data/fold_data.csv
@@ -43,5 +44,5 @@ stages:
   - ${scheduler}
   - ${model_type}
   - ${image.unfreeze}
-  - ${image.pretrained_name}
-  - ${text.pretrained_name}
+  - ${image.pre_trained_name}
+  - ${text.pre_trained_name}
