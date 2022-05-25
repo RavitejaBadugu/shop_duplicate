@@ -1,11 +1,11 @@
 stages:
  eda:
-  cmd: python EDA.py --data_path train.csv --check_sizes True
+  cmd: python EDA.py --data_path ${data.initial_file} --check_sizes True
   params:
-  - train.csv
+  - params.yaml:
+    - ${data.initial_file}
   deps:
   - EDA.py
-  - train.csv
   outs:
   - processed_data/cleaned_data.csv
   plots:

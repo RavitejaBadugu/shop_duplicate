@@ -1,5 +1,5 @@
-#data:
-#initial_file: "train.csv"
+data:
+  initial_file: train.csv
 model_type: "image"
 image:
  image_size: (512,512)
