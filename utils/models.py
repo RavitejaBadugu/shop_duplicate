@@ -6,7 +6,7 @@ import math
 import tensorflow as tf
 from tensorflow.keras.layers import Dense,Input,Layer
 from tensorflow.keras.models import Model
-from tensorflow.keras.applications import EfficientNetB4
+from tensorflow.keras.applications import EfficientNetB1
 from transformers import TFBertModel,TFRobertaModel,TFAlbertModel,TFXLNetModel
 
 
@@ -41,7 +41,7 @@ class ARCFACE_LAYER(Layer):
     w_norm=tf.linalg.l2_normalize(self.w,axis=0)
     x_norm=tf.linalg.l2_normalize(prev_layer,axis=1)
     cos_theta=tf.linalg.matmul(x_norm,w_norm)
-    cos_theta=tf.keras.backend.clip(cos_theta,-1+1e-5,1-1e-5)
+    #cos_theta=tf.keras.backend.clip(cos_theta,-1+1e-5,1-1e-5)
     sin_theta=tf.sqrt(1-tf.pow(cos_theta,tf.cast(2,dtype=tf.float32)))
     cos_theta_m=(cos_theta*self.cos_m)-(sin_theta*self.sin_m)
     cos_theta_m=tf.where(cos_theta_m>self.cos_m,cos_theta_m,cos_theta-self.mm)
@@ -52,7 +52,7 @@ class ARCFACE_LAYER(Layer):
 
 def IMAGE_MODEL(image_size,unfreeze_layers_number):
   tf.keras.backend.clear_session()
-  pre_trained=EfficientNetB4(include_top=False,weights="imagenet",input_shape=(image_size[0],image_size[1],3))
+  pre_trained=EfficientNetB1(include_top=False,weights="imagenet",input_shape=(image_size[0],image_size[1],3))
   ins=Input((),name="label_input")
   for i,layer in enumerate(pre_trained.layers):
     if i>=unfreeze_layers_number:
@@ -106,7 +106,7 @@ def COMBINE_MODEL(max_length,image_size,unfreeze_layers_number):
     hidden_layers.append(text_outputs['hidden_states'][-i])
   x1=tf.keras.layers.Concatenate()(hidden_layers)[:,0,:]
   ################
-  img_trained=EfficientNetB4(include_top=False,weights="imagenet",input_shape=(image_size[0],image_size[1],3))
+  img_trained=EfficientNetB1(include_top=False,weights="imagenet",input_shape=(image_size[0],image_size[1],3))
   for i,layer in enumerate(img_trained.layers):
     if i>=unfreeze_layers_number:
       if not layer.name.endswith("bn"):

@@ -1,28 +1,19 @@
 schema: '2.0'
 stages:
   eda:
-    cmd: python EDA.py --data_path train.csv --check_sizes True
+    cmd: python EDA.py --data_path train.csv
     deps:
     - path: EDA.py
       md5: 7858651b972379b3bd5c5cbf72431366
-      size: 1719
+      size: 1769
     params:
       params.yaml:
         data:
           initial_file: train.csv
     outs:
-    - path: plots/height_distributions.jpg
-      md5: 7fce268791eed5ac8047e7220d499b41
-      size: 55125
-    - path: plots/random_images.jpg
-      md5: 631a1e9da24c200ab05a9817ade07c52
-      size: 1082233
-    - path: plots/weigth_distributions.jpg
-      md5: fff49aed0a0b417d245a165c77e96fc2
-      size: 55195
     - path: processed_data/cleaned_data.csv
       md5: f7b791d5223c7af6945b6e6408171937
-      size: 6464635
+      size: 6498886
   Folds:
     cmd: python create_fold.py --data_path "processed_data/cleaned_data.csv"
     deps:

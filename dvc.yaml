@@ -1,6 +1,6 @@
 stages:
  eda:
-  cmd: python EDA.py --data_path ${data.initial_file} --check_sizes True
+  cmd: python EDA.py --data_path ${data.initial_file}
   params:
   - params.yaml:
     - data
@@ -8,13 +8,6 @@ stages:
   - EDA.py
   outs:
   - processed_data/cleaned_data.csv
-  plots:
-  - plots/weigth_distributions.jpg:
-      cache: false
-  - plots/height_distributions.jpg:
-      cache: false
-  - plots/random_images.jpg:
-      cache: false
  Folds:
   cmd: python create_fold.py --data_path "processed_data/cleaned_data.csv"
   deps:
