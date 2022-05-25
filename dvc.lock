@@ -22,11 +22,11 @@ stages:
       size: 1290
     - path: processed_data/cleaned_data.csv
       md5: f7b791d5223c7af6945b6e6408171937
-      size: 6464635
+      size: 6498886
     outs:
     - path: encoders/label_group_encoder.pkl
-      md5: 65da2c1b1ba8bd133903c883ed8c542d
-      size: 88366
+      md5: 30c274c5252e03579b15b9d1e440e19c
+      size: 88364
     - path: processed_data/fold_data.csv
       md5: 4f2a09483c44118a48970440e6bb85cb
-      size: 6336371
+      size: 6370622

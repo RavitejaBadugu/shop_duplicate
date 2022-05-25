@@ -51,17 +51,17 @@ class ARCFACE_LAYER(Layer):
 
 
 def IMAGE_MODEL(image_size,unfreeze_layers_number):
-  tf.keras.backend.clear_session()
   pre_trained=EfficientNetB1(include_top=False,weights="imagenet",input_shape=(image_size[0],image_size[1],3))
   ins=Input((),name="label_input")
   for i,layer in enumerate(pre_trained.layers):
-    if i>=unfreeze_layers_number:
-      if not layer.name.endswith("bn"):
-        pre_trained.layers[i].trainable=True
-      else:
-        pre_trained.layers[i].trainable=False
-    else:
-      pre_trained.layers[i].trainable=False
+    pre_trained.layers[i].trainable=False
+    #if i>=unfreeze_layers_number:
+    #  if not layer.name.endswith("bn"):
+    #    pre_trained.layers[i].trainable=True
+    #  else:
+    #    pre_trained.layers[i].trainable=False
+    #else:
+    #  pre_trained.layers[i].trainable=False
   x=pre_trained.layers[-1].output
   x=tf.keras.layers.GlobalMaxPooling2D()(x)
   x=Dense(512)(x)
@@ -72,7 +72,6 @@ def IMAGE_MODEL(image_size,unfreeze_layers_number):
   return model
 
 def TEXT_MODEL(pre_trained_name,max_length):
-  tf.keras.backend.clear_session()
   input_ids=Input((max_length,),dtype=tf.int32)
   attention_mask=Input((max_length,),dtype=tf.int32)
   token_type_ids=Input((max_length,),dtype=tf.int32)
@@ -93,7 +92,6 @@ def TEXT_MODEL(pre_trained_name,max_length):
   return model
 
 def COMBINE_MODEL(max_length,image_size,unfreeze_layers_number):
-  tf.keras.backend.clear_session()
   input_ids=Input((max_length,),dtype=tf.int32)
   attention_mask=Input((max_length,),dtype=tf.int32)
   token_type_ids=Input((max_length,),dtype=tf.int32)
@@ -108,13 +106,14 @@ def COMBINE_MODEL(max_length,image_size,unfreeze_layers_number):
   ################
   img_trained=EfficientNetB1(include_top=False,weights="imagenet",input_shape=(image_size[0],image_size[1],3))
   for i,layer in enumerate(img_trained.layers):
-    if i>=unfreeze_layers_number:
-      if not layer.name.endswith("bn"):
-        img_trained.layers[i].trainable=True
-      else:
-        img_trained.layers[i].trainable=False
-    else:
-      img_trained.layers[i].trainable=False
+    img_trained.layers[i].trainable=False
+    #if i>=unfreeze_layers_number:
+    #  if not layer.name.endswith("bn"):
+    #    img_trained.layers[i].trainable=True
+    #  else:
+    #    img_trained.layers[i].trainable=False
+    #else:
+    #  img_trained.layers[i].trainable=False
   x2=img_trained.layers[-1].output
   x2=tf.keras.layers.GlobalMaxPooling2D()(x2)
   ################
