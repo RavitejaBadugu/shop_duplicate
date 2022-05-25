@@ -42,7 +42,7 @@ class IMG_DATA_LOADER(tf.keras.utils.Sequence):
   def Augment_images(self,image):
     transformer=A.Compose([A.Rotate(limit=30,p=0.8),
           A.HorizontalFlip(),
-          A.CoarseDropout(max_height=0.1,max_width=0.1,),
+          A.CoarseDropout(max_height=0.1,max_width=0.1,p=1),
           A.ShiftScaleRotate(shift_limit=0.09,scale_limit=0.2,rotate_limit=0),
           A.RandomBrightnessContrast()
           ])
@@ -168,7 +168,7 @@ class BOTH_DATA_LOADER(tf.keras.utils.Sequence):
   def Augment_images(self,image):
     transformer=A.Compose([A.Rotate(limit=30,p=0.8),
           A.HorizontalFlip(),
-          A.CoarseDropout(max_height=0.1,max_width=0.1,),
+          A.CoarseDropout(max_height=0.1,max_width=0.1,p=1),
           A.ShiftScaleRotate(shift_limit=0.09,scale_limit=0.2,rotate_limit=0),
           A.RandomBrightnessContrast()
           ])

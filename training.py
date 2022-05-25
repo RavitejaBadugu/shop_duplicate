@@ -41,6 +41,7 @@ def TRAINING(args):
     test_data=df.loc[df['gfold']==fold].drop("gfold",axis=1).reset_index(drop=True)
 
     if args.model_type=="image":
+      tf.keras.backend.clear_session()
       model=IMAGE_MODEL(image_size=HYPERPARAMETERS["image"]["image_size"],unfreeze_layers_number=HYPERPARAMETERS["image"]['unfreeze'])
       train_dataloader=IMG_DATA_LOADER(dataframe=train_data,image_size=HYPERPARAMETERS["image"]['image_size'],
                                        batch_size=args.batch_size,aug=True,shuffle=True)
@@ -48,6 +49,7 @@ def TRAINING(args):
                                       batch_size=args.batch_size,aug=False,shuffle=False)
 
     elif args.model_type=="text":
+      tf.keras.backend.clear_session()
       model=TEXT_MODEL(pre_trained_name=HYPERPARAMETERS["text"]["pre_trained_name"],max_length=HYPERPARAMETERS["text"]["max_length"])
       train_dataloader=TEXT_DATA_LOADER(dataframe=train_data,max_length=HYPERPARAMETERS["text"]["max_length"],
                                         pre_trained_name=HYPERPARAMETERS["text"]["pre_trained_name"],batch_size=args.batch_size,shuffle=True)
@@ -55,6 +57,7 @@ def TRAINING(args):
                                        pre_trained_name=HYPERPARAMETERS["text"]["pre_trained_name"],batch_size=args.batch_size,shuffle=False)
 
     else:
+      tf.keras.backend.clear_session()
       model=COMBINE_MODEL(max_length=HYPERPARAMETERS["text"]["max_length"],image_size=HYPERPARAMETERS["image"]["image_size"],
                           unfreeze_layers_number=HYPERPARAMETERS["image"]['unfreeze'])
       train_dataloader=BOTH_DATA_LOADER(dataframe=train_data,batch_size=args.batch_size,
@@ -66,7 +69,9 @@ def TRAINING(args):
                                        max_length=HYPERPARAMETERS["text"]["max_length"],
                                        text_pre_trained_name=HYPERPARAMETERS["text"]["pre_trained_name"],aug=False,shuffle=False)
       
-    model.compile("Adam",loss=CE)
+    #model.compile("Adam",loss=CE)
+    model.compile("Adam",loss=tf.keras.losses.SparseCategoricalCrossentropy(),
+                  metrics=[tf.keras.metrics.SparseCategoricalAccuracy()])
     up_down=tf.keras.callbacks.LearningRateScheduler(lambda epoch: one_cycle(epoch),verbose=1)
     reduce_plat=tf.keras.callbacks.ReduceLROnPlateau(monitor="val_loss",mode="min",
                                                     patience=5,verbose=1,cooldown=2,
