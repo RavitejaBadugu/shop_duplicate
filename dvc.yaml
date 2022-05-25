@@ -3,7 +3,7 @@ stages:
   cmd: python EDA.py --data_path ${data.initial_file} --check_sizes True
   params:
   - params.yaml:
-    - ${data.initial_file}
+    - data
   deps:
   - EDA.py
   outs:
@@ -39,8 +39,8 @@ stages:
   - "models_dir/image_test-3.h5"
   - "models_dir/image_test-4.h5"
   params:
-  - ${scheduler}
-  - ${model_type}
-  - ${image.unfreeze}
-  - ${image.pre_trained_name}
-  - ${text.pre_trained_name}
+  - params.yaml:
+    - model_type
+    - scheduler
+    - image
+    - text
