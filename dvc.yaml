@@ -1,5 +1,3 @@
-vars:
-- params.yaml
 stages:
  eda:
   cmd: python EDA.py --data_path train.csv --check_sizes True
