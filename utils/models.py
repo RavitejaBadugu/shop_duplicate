@@ -80,8 +80,13 @@ def TEXT_MODEL(pre_trained_name,max_length):
   pre_outputs=pre_trained({"input_ids":input_ids,"attention_mask":attention_mask,
                   "token_type_ids":token_type_ids})
   hidden_layers=[]
-  for i in range(4):
-    hidden_layers.append(pre_outputs['hidden_states'][-i])
+  k=0
+  for i in reversed(range(len(pre_outputs['hidden_states']))):
+    if k<4:
+      hidden_layers.append(pre_outputs['hidden_states'][i])
+      k+=1
+    else:
+      break
   x=tf.keras.layers.Concatenate()(hidden_layers)[:,0,:]
   x=Dense(512)(x)
   arc_layer=ARCFACE_LAYER()
@@ -100,8 +105,13 @@ def COMBINE_MODEL(max_length,image_size,unfreeze_layers_number):
   text_outputs=text_trained({"input_ids":input_ids,"attention_mask":attention_mask,
                   "token_type_ids":token_type_ids})
   hidden_layers=[]
-  for i in range(4):
-    hidden_layers.append(text_outputs['hidden_states'][-i])
+  k=0
+  for i in reversed(range(len(pre_outputs['hidden_states']))):
+    if k<4:
+      hidden_layers.append(pre_outputs['hidden_states'][i])
+      k+=1
+    else:
+      break
   x1=tf.keras.layers.Concatenate()(hidden_layers)[:,0,:]
   ################
   img_trained=EfficientNetB1(include_top=False,weights="imagenet",input_shape=(image_size[0],image_size[1],3))
