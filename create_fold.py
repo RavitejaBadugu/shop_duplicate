@@ -24,7 +24,7 @@ def CREATE_FOLD(args):
   y=df['label_group']
   for i,(train,test) in enumerate(kfold.split(x,y)):
     df.loc[test,'gfold']=i
-  print("created the group kfold")
+  print("created the kfold")
   if not os.path.isdir("processed_data"):
     os.mkdir("processed_data")
     print("created processed_data directory")
