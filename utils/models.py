@@ -9,7 +9,6 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.applications import EfficientNetB1
 from transformers import TFBertModel,TFRobertaModel,TFAlbertModel,TFXLNetModel
 
-
 class ARCFACE_LAYER(Layer):
   def __init__(self,m=0.5,s=30,n_classes=11014):
     super(ARCFACE_LAYER,self).__init__()
