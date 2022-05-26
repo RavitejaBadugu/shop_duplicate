@@ -70,8 +70,14 @@ def TRAINING(args):
                                        text_pre_trained_name=HYPERPARAMETERS["text"]["pre_trained_name"],aug=False,shuffle=False)
       
     #model.compile("Adam",loss=CE)
-    model.compile("Adam",loss=tf.keras.losses.SparseCategoricalCrossentropy(),
-                  metrics=[tf.keras.metrics.SparseCategoricalAccuracy()])
+    if args.model_type=="text":
+      model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=3e-5),
+                    loss=tf.keras.losses.SparseCategoricalCrossentropy(),
+                    metrics=[tf.keras.metrics.SparseCategoricalAccuracy()])
+    else:
+      model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3),
+                    loss=tf.keras.losses.SparseCategoricalCrossentropy(),
+                    metrics=[tf.keras.metrics.SparseCategoricalAccuracy()])
     up_down=tf.keras.callbacks.LearningRateScheduler(lambda epoch: one_cycle(epoch),verbose=1)
     reduce_plat=tf.keras.callbacks.ReduceLROnPlateau(monitor="val_loss",mode="min",
                                                     patience=5,verbose=1,cooldown=2,
