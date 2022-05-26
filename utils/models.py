@@ -10,7 +10,7 @@ from tensorflow.keras.applications import EfficientNetB1
 from transformers import TFBertModel,TFRobertaModel,TFAlbertModel,TFXLNetModel
 
 class ARCFACE_LAYER(Layer):
-  def __init__(self,m=0.5,s=30,n_classes=11014):
+  def __init__(self,m=0.7,s=30,n_classes=11014):
     super(ARCFACE_LAYER,self).__init__()
     self.m=m
     self.s=s
@@ -26,7 +26,7 @@ class ARCFACE_LAYER(Layer):
 
   def get_config(self):
     config=super().get_config()
-    config.update({"m":0.5,
+    config.update({"m":0.7,
                    "s":30,
                    "n_classes":11014})
     return config
@@ -40,10 +40,9 @@ class ARCFACE_LAYER(Layer):
     w_norm=tf.linalg.l2_normalize(self.w,axis=0)
     x_norm=tf.linalg.l2_normalize(prev_layer,axis=1)
     cos_theta=tf.linalg.matmul(x_norm,w_norm)
-    #cos_theta=tf.keras.backend.clip(cos_theta,-1+1e-5,1-1e-5)
     sin_theta=tf.sqrt(1-tf.pow(cos_theta,tf.cast(2,dtype=tf.float32)))
     cos_theta_m=(cos_theta*self.cos_m)-(sin_theta*self.sin_m)
-    cos_theta_m=tf.where(cos_theta_m>self.cos_m,cos_theta_m,cos_theta-self.mm)
+    cos_theta_m=tf.where(cos_theta>self.threshold,cos_theta_m,cos_theta-self.mm)
     final=self.s*((y_hot*cos_theta_m)+((1-y_hot)*cos_theta))
     return final
   

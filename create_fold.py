@@ -3,7 +3,7 @@ This file creates the group kfold split to the data.
 And applies label Encoder to the target Feature.
 """
 from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import GroupKFold
+from sklearn.model_selection import StratifiedKFold
 from utils.randomness import *
 import argparse
 import pickle
@@ -19,15 +19,17 @@ def CREATE_FOLD(args):
   with open("encoders/label_group_encoder.pkl","wb") as f:
     pickle.dump(encoder,f)
   df['gfold']=-1
-  gfold=GroupKFold(n_splits=5)
-  for i,(train,test) in enumerate(gfold.split(df,groups=df['label_group'])):
+  kfold=StratifiedKFold(n_splits=5)
+  x=df.drop("label_group",axis=1)
+  y=df['label_group']
+  for i,(train,test) in enumerate(kfold.split(x,y)):
     df.loc[test,'gfold']=i
   print("created the group kfold")
   if not os.path.isdir("processed_data"):
     os.mkdir("processed_data")
     print("created processed_data directory")
   df.to_csv("processed_data/fold_data.csv",index=False)
-  print("group kfold data is stored at processed_data/fold_data.csv")
+  print("stratified kfold data is stored at processed_data/fold_data.csv")
 if __name__=="__main__":
   set_randomness()
   parser=argparse.ArgumentParser(description="create folds")
