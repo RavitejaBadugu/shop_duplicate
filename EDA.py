@@ -39,11 +39,12 @@ def Visualize(df):
 if __name__=="__main__":
   parser=argparse.ArgumentParser(description="EDA and cleaning")
   parser.add_argument("--data_path",help="path to the data file", type=pathlib.Path,required = True)
+  parser.add_argument("--images_base_path",help="path to the images", type=pathlib.Path,required = True)
   parser.add_argument("--check_sizes",help="whether to check the distributions of height and width of images", 
                       type=bool)
   args=parser.parse_args()
   df=pd.read_csv(args.data_path)
-  df['image_path']=df['image_path']=df['image'].apply(lambda x: "train_images/"+x)
+  df['image_path']=df['image_path']=df['image'].apply(lambda x: args.images_base_path+"/"+x)
   if not os.path.isdir("processed_data"):
     os.mkdir("processed_data")
   df.to_csv("processed_data/cleaned_data.csv",index=False)
