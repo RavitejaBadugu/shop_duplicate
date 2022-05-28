@@ -51,6 +51,8 @@ class ARCFACE_LAYER(Layer):
 def IMAGE_MODEL(image_size,unfreeze_layers_number):
   pre_trained=EfficientNetB1(include_top=False,weights="imagenet",input_shape=(image_size[0],image_size[1],3))
   ins=Input((),name="label_input")
+  if unfreeze_layers_number!=0:
+    print("unfreezing some layers")
   for i,layer in enumerate(pre_trained.layers):
     if unfreeze_layers_number==0:
       pre_trained.layers[i].trainable=False
@@ -106,9 +108,9 @@ def COMBINE_MODEL(max_length,image_size,unfreeze_layers_number):
                   "token_type_ids":token_type_ids})
   hidden_layers=[]
   k=0
-  for i in reversed(range(len(pre_outputs['hidden_states']))):
+  for i in reversed(range(len(text_outputs['hidden_states']))):
     if k<4:
-      hidden_layers.append(pre_outputs['hidden_states'][i])
+      hidden_layers.append(text_outputs['hidden_states'][i])
       k+=1
     else:
       break
@@ -117,15 +119,15 @@ def COMBINE_MODEL(max_length,image_size,unfreeze_layers_number):
   img_trained=EfficientNetB1(include_top=False,weights="imagenet",input_shape=(image_size[0],image_size[1],3))
   for i,layer in enumerate(img_trained.layers):
     if unfreeze_layers_number==0:
-      pre_trained.layers[i].trainable=False
+      img_trained.layers[i].trainable=False
     else:
       if i>=unfreeze_layers_number:
         if not layer.name.endswith("bn"):
-          pre_trained.layers[i].trainable=True
+          img_trained.layers[i].trainable=True
         else:
-          pre_trained.layers[i].trainable=False
+          img_trained.layers[i].trainable=False
       else:
-        pre_trained.layers[i].trainable=False
+        img_trained.layers[i].trainable=False
   x2=img_trained.layers[-1].output
   x2=tf.keras.layers.GlobalMaxPooling2D()(x2)
   ################

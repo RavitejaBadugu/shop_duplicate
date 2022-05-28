@@ -3,7 +3,7 @@ data:
 model_type: "image"
 image:
  image_size: (512,512)
- unfreeze: "0"
+ unfreeze: "234"
  pre_trained_name: "EfficientNetB1"
 text:
   max_length: "270"
