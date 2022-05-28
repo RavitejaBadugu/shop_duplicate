@@ -1,6 +1,6 @@
 data:
   initial_file: train.csv
-model_type: "text"
+model_type: "image"
 image:
  image_size: (512,512)
  unfreeze: "0"
@@ -8,4 +8,5 @@ image:
 text:
   max_length: "270"
   pre_trained_name: "bert-base-uncased"
-scheduler: "None"
+scheduler: "one_cycle"
+#234

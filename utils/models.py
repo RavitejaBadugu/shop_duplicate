@@ -52,14 +52,16 @@ def IMAGE_MODEL(image_size,unfreeze_layers_number):
   pre_trained=EfficientNetB1(include_top=False,weights="imagenet",input_shape=(image_size[0],image_size[1],3))
   ins=Input((),name="label_input")
   for i,layer in enumerate(pre_trained.layers):
-    pre_trained.layers[i].trainable=False
-    #if i>=unfreeze_layers_number:
-    #  if not layer.name.endswith("bn"):
-    #    pre_trained.layers[i].trainable=True
-    #  else:
-    #    pre_trained.layers[i].trainable=False
-    #else:
-    #  pre_trained.layers[i].trainable=False
+    if unfreeze_layers_number==0:
+      pre_trained.layers[i].trainable=False
+    else:
+      if i>=unfreeze_layers_number:
+        if not layer.name.endswith("bn"):
+          pre_trained.layers[i].trainable=True
+        else:
+          pre_trained.layers[i].trainable=False
+      else:
+        pre_trained.layers[i].trainable=False
   x=pre_trained.layers[-1].output
   x=tf.keras.layers.GlobalMaxPooling2D()(x)
   x=Dense(512)(x)
@@ -114,14 +116,16 @@ def COMBINE_MODEL(max_length,image_size,unfreeze_layers_number):
   ################
   img_trained=EfficientNetB1(include_top=False,weights="imagenet",input_shape=(image_size[0],image_size[1],3))
   for i,layer in enumerate(img_trained.layers):
-    img_trained.layers[i].trainable=False
-    #if i>=unfreeze_layers_number:
-    #  if not layer.name.endswith("bn"):
-    #    img_trained.layers[i].trainable=True
-    #  else:
-    #    img_trained.layers[i].trainable=False
-    #else:
-    #  img_trained.layers[i].trainable=False
+    if unfreeze_layers_number==0:
+      pre_trained.layers[i].trainable=False
+    else:
+      if i>=unfreeze_layers_number:
+        if not layer.name.endswith("bn"):
+          pre_trained.layers[i].trainable=True
+        else:
+          pre_trained.layers[i].trainable=False
+      else:
+        pre_trained.layers[i].trainable=False
   x2=img_trained.layers[-1].output
   x2=tf.keras.layers.GlobalMaxPooling2D()(x2)
   ################
