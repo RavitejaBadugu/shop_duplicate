@@ -44,7 +44,7 @@ if __name__=="__main__":
                       type=bool)
   args=parser.parse_args()
   df=pd.read_csv(args.data_path)
-  df['image_path']=df['image_path']=df['image'].apply(lambda x: args.images_base_path+"/"+x)
+  df['image_path']=df['image_path']=df['image'].apply(lambda x: os.path.join(args.images_base_path,x))
   if not os.path.isdir("processed_data"):
     os.mkdir("processed_data")
   df.to_csv("processed_data/cleaned_data.csv",index=False)
