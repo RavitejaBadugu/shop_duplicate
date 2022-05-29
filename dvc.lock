@@ -12,21 +12,21 @@ stages:
           initial_file: train.csv
     outs:
     - path: processed_data/cleaned_data.csv
-      md5: f7b791d5223c7af6945b6e6408171937
-      size: 6464635
+      md5: 790cb0bdce42e5ac0521f09d061a34e1
+      size: 6498886
   Folds:
     cmd: python create_fold.py --data_path "processed_data/cleaned_data.csv"
     deps:
     - path: create_fold.py
       md5: 28a575431213724ee5fe7ef31fd8fe7b
-      size: 1331
+      size: 1369
     - path: processed_data/cleaned_data.csv
-      md5: f7b791d5223c7af6945b6e6408171937
-      size: 6464635
+      md5: 790cb0bdce42e5ac0521f09d061a34e1
+      size: 6498886
     outs:
     - path: encoders/label_group_encoder.pkl
-      md5: 65da2c1b1ba8bd133903c883ed8c542d
-      size: 88366
+      md5: 30c274c5252e03579b15b9d1e440e19c
+      size: 88364
     - path: processed_data/fold_data.csv
-      md5: 3ebaf40498e5510a5329424cffa7cd58
-      size: 6336371
+      md5: 9689bf37efb6e4628e0bed3276296115
+      size: 6370622
