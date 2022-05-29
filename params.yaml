@@ -3,10 +3,10 @@ data:
 model_type: "image"
 image:
  image_size: (512,512)
- unfreeze: "234"
- pre_trained_name: "EfficientNetB1"
+ unfreeze: "264"
+ pre_trained_name: "EfficientNetB3"
 text:
   max_length: "270"
   pre_trained_name: "bert-base-uncased"
 scheduler: "one_cycle"
-#234
+#264

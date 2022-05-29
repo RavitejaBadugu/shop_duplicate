@@ -6,7 +6,7 @@ import math
 import tensorflow as tf
 from tensorflow.keras.layers import Dense,Input,Layer
 from tensorflow.keras.models import Model
-from tensorflow.keras.applications import EfficientNetB1
+from tensorflow.keras.applications import EfficientNetB3
 from transformers import TFBertModel,TFRobertaModel,TFAlbertModel,TFXLNetModel
 
 class ARCFACE_LAYER(Layer):
@@ -49,7 +49,7 @@ class ARCFACE_LAYER(Layer):
 
 
 def IMAGE_MODEL(image_size,unfreeze_layers_number):
-  pre_trained=EfficientNetB1(include_top=False,weights="imagenet",input_shape=(image_size[0],image_size[1],3))
+  pre_trained=EfficientNetB3(include_top=False,weights="imagenet",input_shape=(image_size[0],image_size[1],3))
   ins=Input((),name="label_input")
   if unfreeze_layers_number!=0:
     print("unfreezing some layers")
@@ -116,7 +116,7 @@ def COMBINE_MODEL(max_length,image_size,unfreeze_layers_number):
       break
   x1=tf.keras.layers.Concatenate()(hidden_layers)[:,0,:]
   ################
-  img_trained=EfficientNetB1(include_top=False,weights="imagenet",input_shape=(image_size[0],image_size[1],3))
+  img_trained=EfficientNetB3(include_top=False,weights="imagenet",input_shape=(image_size[0],image_size[1],3))
   for i,layer in enumerate(img_trained.layers):
     if unfreeze_layers_number==0:
       img_trained.layers[i].trainable=False
