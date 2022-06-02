@@ -10,7 +10,7 @@ from tensorflow.keras.applications import EfficientNetB3
 from transformers import TFBertModel,TFRobertaModel,TFAlbertModel,TFXLNetModel
 
 class ARCFACE_LAYER(Layer):
-  def __init__(self,m=0.7,s=30,n_classes=11014):
+  def __init__(self,m=0.5,s=30,n_classes=11014):
     super(ARCFACE_LAYER,self).__init__()
     self.m=m
     self.s=s
@@ -26,7 +26,7 @@ class ARCFACE_LAYER(Layer):
 
   def get_config(self):
     config=super().get_config()
-    config.update({"m":0.7,
+    config.update({"m":0.5,
                    "s":30,
                    "n_classes":11014})
     return config
