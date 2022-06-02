@@ -71,7 +71,7 @@ def TRAINING(args):
       
     #model.compile("Adam",loss=CE)
     if args.model_type=="text":
-      model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=3e-5),
+      model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=5e-5),
                     loss=tf.keras.losses.SparseCategoricalCrossentropy(),
                     metrics=[tf.keras.metrics.SparseCategoricalAccuracy()])
     else:
