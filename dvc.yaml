@@ -19,7 +19,7 @@ stages:
  training:
   cmd: >-
     python training.py --data_path processed_data/fold_data.csv --model_type ${model_type}
-    --batch_size 16 --save_model_path "models_dir/bert" --epochs 30 --lr_callback ${scheduler}
+    --batch_size 16 --save_model_path "models_dir/bert" --FOLDS 0 --epochs 30 --lr_callback ${scheduler}
   deps:
   - training.py
   - processed_data/fold_data.csv
