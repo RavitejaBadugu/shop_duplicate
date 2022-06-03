@@ -91,6 +91,7 @@ def TEXT_MODEL(pre_trained_name,max_length):
     else:
       break
   x=tf.keras.layers.Concatenate()(hidden_layers)[:,0,:]
+  #x=pre_outputs['pooler_output']
   x=Dense(512)(x)
   arc_layer=ARCFACE_LAYER()
   x=arc_layer([x,ins])

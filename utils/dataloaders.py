@@ -23,7 +23,7 @@ class IMG_DATA_LOADER(tf.keras.utils.Sequence):
       self.on_epoch_end()
 
   def __len__(self):
-    return int(np.ceil(self.data.shape[0]/self.batch_size))
+    return int(np.floor(self.data.shape[0]/self.batch_size))
   
   def on_epoch_end(self):
     if self.shuffle:
@@ -88,7 +88,7 @@ class TEXT_DATA_LOADER(tf.keras.utils.Sequence):
       self.on_epoch_end()
 
   def __len__(self):
-    return int(np.ceil(self.data.shape[0]/self.batch_size))
+    return int(np.floor(self.data.shape[0]/self.batch_size))
   
   def on_epoch_end(self):
     if self.shuffle:
@@ -149,7 +149,8 @@ class BOTH_DATA_LOADER(tf.keras.utils.Sequence):
       self.on_epoch_end()
 
   def __len__(self):
-    return int(np.ceil(self.data.shape[0]/self.batch_size))
+        return int(np.floor(self.data.shape[0]/self.batch_size))
+
   
   def on_epoch_end(self):
     if self.shuffle:
