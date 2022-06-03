@@ -22,7 +22,8 @@ class ARCFACE_LAYER(Layer):
   
   def build(self,input_shape):
     prev_layer_units=input_shape[0][1]
-    self.w=self.add_weight(shape=(prev_layer_units,self.n_classes),trainable=True)
+    self.w=self.add_weight(shape=(prev_layer_units,self.n_classes),trainable=True,
+                          initializer='glorot_uniform')
 
   def get_config(self):
     config=super().get_config()

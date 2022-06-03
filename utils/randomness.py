@@ -10,6 +10,7 @@ def set_randomness():
   randomness because we use GPU.
 
   '''
-  os.environ['PYTHONHASHSEED']="0"
+  os.environ['PYTHONHASHSEED']="42"
   rn.seed(42)
   np.random.seed(42)
+  tf.random.set_seed(42)

@@ -13,18 +13,6 @@ from utils.randomness import *
 from utils.dataloaders import *
 from params import HYPERPARAMETERS
 
-
-def CE(y_true,y_pred):
-  '''
-  loss function = y*log(y_hat)
-  '''
-  y_true=tf.cast(y_true,dtype=tf.int32)
-  y_true=tf.one_hot(y_true,depth=11014)
-  y_true=tf.cast(y_true,dtype=y_pred.dtype)
-  ce_loss=y_true*tf.keras.backend.log(y_pred+1e-5)
-  batch_loss=tf.reduce_sum(ce_loss,axis=-1)
-  return -1*tf.reduce_mean(batch_loss)
-
 def one_cycle(epoch,lr_min=1e-5,lr_max=2e-4):
   if epoch<5:
     lr=(lr_max-lr_min)/5 *(epoch) + lr_min
@@ -36,8 +24,8 @@ def one_cycle(epoch,lr_min=1e-5,lr_max=2e-4):
 
 def TRAINING(args):
   df=pd.read_csv(args.data_path)
-  FOLDS=args.FOLDS.split(",")
-  for fold in FOLDS:
+  TRAIN_FOLDS=list(int(x) for x in args.FOLDS.split(","))
+  for fold in TRAIN_FOLDS:
     train_data=df.loc[df['gfold']!=fold].drop("gfold",axis=1).reset_index(drop=True)
     test_data=df.loc[df['gfold']==fold].drop("gfold",axis=1).reset_index(drop=True)
 
@@ -72,6 +60,7 @@ def TRAINING(args):
       
     #model.compile("Adam",loss=CE)
     if args.model_type=="text":
+      print("learning rate is 5e-5")
       model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=5e-5),
                     loss=tf.keras.losses.SparseCategoricalCrossentropy(),
                     metrics=[tf.keras.metrics.SparseCategoricalAccuracy()])
