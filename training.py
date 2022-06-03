@@ -36,7 +36,8 @@ def one_cycle(epoch,lr_min=1e-5,lr_max=2e-4):
 
 def TRAINING(args):
   df=pd.read_csv(args.data_path)
-  for fold in range(5):
+  FOLDS=args.FOLDS.split(",")
+  for fold in FOLDS:
     train_data=df.loc[df['gfold']!=fold].drop("gfold",axis=1).reset_index(drop=True)
     test_data=df.loc[df['gfold']==fold].drop("gfold",axis=1).reset_index(drop=True)
 
@@ -107,6 +108,7 @@ if __name__=="__main__":
   parser.add_argument("--batch_size",help="batch size for the model", type=int, default=32,required = True)
   parser.add_argument("--save_model_path",help="model path along with name where to save it", type=str,required = True)
   parser.add_argument("--epochs",help="number of epochs", type=int,default=30,required = True)
+  parser.add_argument("--FOLDS",help="which folds to run comma separated", type=str,required = True)
   parser.add_argument("--lr_callback",help="type of lr scheduler", choices=["one_cycle","reduce_lr_plateau","None"],
                       required=True,type=str)
   args=parser.parse_args()
