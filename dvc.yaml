@@ -1,6 +1,6 @@
 stages:
  eda:
-  cmd: python EDA.py --data_path ${data.initial_file} --images_base_path train_images
+  cmd: python EDA.py --data_path ${data.initial_file} --images_base_path ../input/shopee-product-matching/train_images
   params:
   - params.yaml:
     - data
