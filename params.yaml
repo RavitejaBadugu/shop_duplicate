@@ -3,8 +3,8 @@ data:
 model_type: "text"
 image:
  image_size: (512,512)
- unfreeze: "264"
- pre_trained_name: "EfficientNetB3"
+ unfreeze: "0"
+ pre_trained_name: "EfficientNetB0"
 text:
   max_length: "270"
   pre_trained_name: "bert-base-uncased"
