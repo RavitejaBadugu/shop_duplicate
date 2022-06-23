@@ -1,0 +1,12 @@
+train_images/
+test_images/
+sample_data/
+tfrecords
+processed_data
+*.zip
+*.csv
+.config/
+__*__
+.dvc
+processed_data/*
+models_dir

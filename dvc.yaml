@@ -1,0 +1,35 @@
+stages:
+ eda:
+  cmd: python EDA.py --data_path ${data.initial_file} --images_base_path ../input/shopee-product-matching/train_images
+  params:
+  - params.yaml:
+    - data
+  deps:
+  - EDA.py
+  outs:
+  - processed_data/cleaned_data.csv
+ Folds:
+  cmd: python create_fold.py --data_path "processed_data/cleaned_data.csv"
+  deps:
+  - create_fold.py
+  - processed_data/cleaned_data.csv
+  outs:
+  - encoders/label_group_encoder.pkl
+  - processed_data/fold_data.csv
+ training:
+  cmd: >-
+    python training.py --data_path processed_data/fold_data.csv --model_type ${model_type}
+    --batch_size 32 --save_model_path "models_dir/bert" --FOLDS 1 --epochs 30 --lr_callback ${scheduler}
+  deps:
+  - training.py
+  - processed_data/fold_data.csv
+  - utils/models.py
+  - utils/dataloaders.py
+  outs:
+  - "models_dir/bert1.h5"
+  params:
+  - params.yaml:
+    - model_type
+    - scheduler
+    - image
+    - text

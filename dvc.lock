@@ -1,0 +1,32 @@
+schema: '2.0'
+stages:
+  eda:
+    cmd: python EDA.py --data_path train.csv --images_base_path train_images
+    deps:
+    - path: EDA.py
+      md5: 7466a1849e7ed2265a0c3f2e7ee3ea2d
+      size: 1895
+    params:
+      params.yaml:
+        data:
+          initial_file: train.csv
+    outs:
+    - path: processed_data/cleaned_data.csv
+      md5: f7b791d5223c7af6945b6e6408171937
+      size: 6464635
+  Folds:
+    cmd: python create_fold.py --data_path "processed_data/cleaned_data.csv"
+    deps:
+    - path: create_fold.py
+      md5: 28a575431213724ee5fe7ef31fd8fe7b
+      size: 1331
+    - path: processed_data/cleaned_data.csv
+      md5: f7b791d5223c7af6945b6e6408171937
+      size: 6464635
+    outs:
+    - path: encoders/label_group_encoder.pkl
+      md5: 65da2c1b1ba8bd133903c883ed8c542d
+      size: 88366
+    - path: processed_data/fold_data.csv
+      md5: 3ebaf40498e5510a5329424cffa7cd58
+      size: 6336371

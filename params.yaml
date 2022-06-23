@@ -1,0 +1,12 @@
+data:
+  initial_file: train.csv
+model_type: "image"
+image:
+ image_size: (256,256)
+ unfreeze: "0"
+ pre_trained_name: "EfficientNetB0"
+text:
+  max_length: "270"
+  pre_trained_name: "bert-base-uncased"
+scheduler: "None"
+#264

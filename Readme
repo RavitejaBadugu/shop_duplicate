@@ -1,0 +1,3 @@
+Observations:
+tried effb1-> after 3 epochs val loss is minimum then go to higher value and taking more than 10 epochs to reach that min value.
+The min value for unfreezing is smaller then freezing all.
