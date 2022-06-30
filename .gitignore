@@ -1,12 +1,8 @@
-train_images/
-test_images/
-sample_data/
-tfrecords
-processed_data
+*.jpg
+*.tfrec
 *.zip
 *.csv
 .config/
 __*__
 .dvc
-processed_data/*
-models_dir
+*.h5
