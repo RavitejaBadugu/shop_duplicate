@@ -1,0 +1,10 @@
+tensorflow==2.6.4
+boto3==1.24.35
+fastapi==0.79.0
+uvicorn==0.18.2
+psycopg2-binary
+transformers==4.20.1
+tqdm
+pandas
+opencv-python
+python-multipart==0.0.5

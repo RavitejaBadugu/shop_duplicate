@@ -1,0 +1,8 @@
+[Unit]
+Description="This ervice runs the tensorflow server for cv models"
+After=docker.service
+[Service]
+WorkingDirectory=/home/ubuntu/cv
+ExecStart= docker run -p 8501:8501 --mount type=bind,source=/home/ubuntu/cv/cv_models,target=/models/cv -e MODEL_NAME=cv -t tensorflow/serving
+[Install]
+WantedBy=multi-user.target

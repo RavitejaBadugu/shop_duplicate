@@ -3,7 +3,6 @@ from tqdm import tqdm
 import cv2
 import boto3
 import os
-import json
 import pandas as pd
 import pickle
 bucket_name=os.environ['BucketName']
@@ -18,7 +17,7 @@ def conversion(dataframe):
         post={}
         post['title']=title
         img=tf.keras.preprocessing.image.load_img(image,target_size=(512,512))
-        img=tf.keras.preprocessing.image.img_to_array(img)/255.0
+        img=tf.keras.preprocessing.image.img_to_array(img)
         img=cv2.imencode('.jpg', img, (cv2.IMWRITE_JPEG_QUALITY, 94))[1].tostring()
         post['image_bytes']=img
         with open(f"{posting_id}.pkl","wb") as f:

@@ -1,4 +1,5 @@
 import os
+import tensorflow as tf
 import requests
 import boto3
 import pickle
@@ -10,15 +11,11 @@ from psycopg2 import sql
 from transformers import BertTokenizer
 from insert_to_db import Make_Connection
 
-bucket_name=os.environ['BucketName']
+
 nlp_host=os.environ['nlp_host']
 cv_host=os.environ['cv_host']
 nlp_port=os.environ['nlp_port']
 cv_port=os.environ['cv_port']
-knn_nlp_host=os.environ['knn_nlp_host']
-knn_nlp_port=os.environ['knn_nlp_port']
-knn_cv_host=os.environ['knn_cv_host']
-knn_cv_port=os.environ['knn_cv_port']
 
 
 IMAGE_SIZE=[512,512]
@@ -55,33 +52,33 @@ def get_title_embeddings(titles):
     return np.array(json.loads(json_response.text)['outputs'])
 
 
-def get_image_embeddings(paths):
-    temp=np.zeros((len(paths),512,512,3))
-    for i,path in enumerate(paths):
-        img=tf.keras.preprocessing.image.load_img(path,target_size=(512,512))
-        img=tf.keras.preprocessing.image.img_to_array(img)/255.0
-        temp[i,]=img
-    instances=[{"input_1":img.tolist()}]
+def get_image_embeddings(images):
+    img=np.expand_dims(images,axis=0)
+    img=img/255.0
+    inputs={"input_1":img.tolist()}
     url=f'http://{cv_host}:{cv_port}/v1/models/cv:predict'
-    data = json.dumps({"signature_name": "serving_default", "instances": instances})
+    data = json.dumps({"signature_name": "serving_default", "inputs": inputs})
     headers = {"content-type": "application/json"}
     json_response = requests.post(url, data=data, headers=headers)
-    return np.array(json.loads(json_response.text)['predictions'])
+    return np.array(json.loads(json_response.text)['outputs'])
 
-def FIND_SIMILAR(title,path):
+def FIND_SIMILAR(title,image):
+    knn_nlp_host=os.environ['knn_nlp_host']
+    knn_nlp_port=os.environ['knn_nlp_port']
+    knn_cv_host=os.environ['knn_cv_host']
+    knn_cv_port=os.environ['knn_cv_port']
     title_embeds=get_title_embeddings([title]).tolist()
-    img_embeds=get_image_embeddings([path]).tolist()
-    total_idx=[]
+    img_embeds=get_image_embeddings(image).tolist()
+    images_idx=[]
+    title_idx=[]
     headers = {"content-type": "application/json"}
     data=json.dumps({"inputs":title_embeds})
     response=json.loads(requests.post(url=f"http://{knn_nlp_host}:{knn_nlp_port}/invocations",data=data,headers=headers).text)
     dis,indx=response
     dis,indx=np.array(dis)[0],np.array(indx)[0]
     close_dis_indx=np.where(dis<NLP_THRESHOLD)
-    print(dis,indx,close_dis_indx)
     matched_post_idxs=indx[close_dis_indx]
-    total_idx.extend(matched_post_idxs)
-    print(f"total_idx is {total_idx}")
+    title_idx.extend(matched_post_idxs)
     ########################################################
     headers = {"content-type": "application/json"}
     data=json.dumps({"inputs":img_embeds})
@@ -89,11 +86,9 @@ def FIND_SIMILAR(title,path):
     dis,indx=response
     dis,indx=np.array(dis)[0],np.array(indx)[0]
     close_dis_indx=np.where(dis<CV_THRESHOLD)
-    print(dis,indx,close_dis_indx)
     matched_post_idxs=indx[close_dis_indx]
-    total_idx.extend(matched_post_idxs)
-    print(f"totoal_idx is {total_idx}")
-    return list(int(x) for x in total_idx)
+    images_idx.extend(matched_post_idxs)
+    return list(set(title_idx).intersection(set(images_idx)))
 
 def get_post_names(idxs):
     conn,cursor=Make_Connection()
@@ -102,34 +97,29 @@ def get_post_names(idxs):
         from post_info
         where id in ({idxs})
         """).format(idxs=sql.SQL(",").join(sql.Placeholder()*len(idxs)))
-    print(type(idxs),type(idxs[0]))
-    cursor.execute(q,(tuple(idxs)))
+    cursor.execute(q,(tuple([int(idx)+1 for idx in idxs])))
     data=cursor.fetchall()
     cursor.close()
     conn.close()
     return [d['post_names'] for d in data]
 
 def get_images_from_s3(post_names):
-    s3=boto3.client("s3")
+    bucket_name=os.environ['BucketName']
+    s3=boto3.resource("s3")
+    bucket=s3.Bucket(bucket_name)
     images=[]
     titles=[]
     for name in post_names:
-        s3.Bucket(bucket_name).download_file(name,f"{name}.pkl")
-        with open(f"{name}.pkl","rb") as f:
-            post_dict=pickle.load(f)
-        image_bytes=post_dict['image_bytes']
-        title=post_dict['title']
-        img=tf.io.decode_jpeg(image_bytes,channels=3).numpy().tolist()
-        images.append(img)
-        titles.append(title)
-        os.remove(f"{name}.pkl")
-    return images,titles
+        data=bucket.Object(f"{name}.pkl").get()['Body'].read()
+        loaded_data=pickle.loads(data)
+        titles.append(loaded_data['title'])
+        images.append(tf.io.decode_jpeg(loaded_data['image_bytes']).numpy().tolist())
+    return {"titles":titles,"images":images}
 
-def Retrive_post(title,image,knn):
-    idxs=FIND_SIMILAR(title,image,knn)
+def Retrive_post(title,image):
+    idxs=FIND_SIMILAR(title,image)
     if len(idxs)==0:
-        return None
+        return {"titles":None,"images":None}
     else:
         post_names=get_post_names(idxs)
         return get_images_from_s3(post_names)
-    

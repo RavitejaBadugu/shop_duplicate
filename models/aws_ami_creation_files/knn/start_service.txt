@@ -1,0 +1,8 @@
+sudo apt-get install curl
+cd /tmp && curl -O https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh
+bash Anaconda3-2022.05-Linux-x86_64.sh
+source ~/.bashrc
+cd ..
+conda env create -n knn_env --file conda.yaml
+/bin/bash -c 'PATH=/home/ubuntu/anaconda3/envs/knn_env/bin/:$PATH exec mlflow models serve -m mlruns/0/8f6062c1fcba4604a7ae3ea66aec641e/artifacts/image_knn --host 0.0.0.0 --port 5000 --env-manager=local'
+/bin/bash -c 'PATH=/home/ubuntu/anaconda3/envs/knn_env/bin/:$PATH exec mlflow models serve -m mlruns/0/8f6062c1fcba4604a7ae3ea66aec641e/artifacts/title_knn --host 0.0.0.0 --port 5002 --env-manager=local'

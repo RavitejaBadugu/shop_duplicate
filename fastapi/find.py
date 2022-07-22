@@ -1,17 +1,14 @@
-from fastapi import FastAPI
-from base_models import Find_Input_Schema,Find_Output_Schema
+from fastapi import FastAPI,UploadFile,File,Response
 from find_utils import Retrive_post
-
+import cv2
+import numpy as np
+from fastapi.responses import JSONResponse
 app=FastAPI()
 
-@app.post("/find",response_model=Find_Output_Schema)
-async def FIND_ME(input_data: Find_Input_Schema):
-    data=input_data.dict()
-    title,image=data['title'],data['image']
-    output=Retrive_post(title,image)
-    if output is not None:    
-        titles,images=output
-    else:
-        titles,images=None,None
-    return {"titles":titles,"images":images}
-    
+@app.post("/find")
+async def FIND_ME(title: str,file: UploadFile = File(...)):
+    img=np.frombuffer(file.file.read(),dtype=np.uint8)
+    img=cv2.cvtColor(cv2.imdecode(img,flags=1),cv2.COLOR_BGR2RGB)
+    img=cv2.resize(img,(512,512))
+    output=Retrive_post(title,img)
+    return JSONResponse(output)

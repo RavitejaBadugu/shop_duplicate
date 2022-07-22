@@ -1,0 +1,7 @@
+__*__
+*.pkl
+*.jpg
+insert_to_s3.py
+*.csv
+*.zip
+.gitignore

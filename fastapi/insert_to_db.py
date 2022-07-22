@@ -37,6 +37,13 @@ def Creator():
     """)
     cursor.execute(query)
     conn.commit()
+    query=sql.SQL("""
+    CREATE INDEX post_index
+    on post_info(id)
+    );
+    """)
+    cursor.execute(query)
+    conn.commit()
     cursor.close()
     conn.close()
 

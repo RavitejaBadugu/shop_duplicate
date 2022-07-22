@@ -1,8 +1,9 @@
 import os
 import requests
+import cv2
 import numpy as np
 import streamlit as st
-import tensorflow as tf
+import matplotlib.pyplot as plt
 
 host=os.environ['host']
 port=os.environ['port']
@@ -17,21 +18,25 @@ image=st.file_uploader(label="upload the image",type=['png', 'jpg'],accept_multi
 
 find_me=st.button("find")
 
+
 if find_me:
     if title!="" and image is not None:
         with st.spinner("we are processing"):
-            img_list=np.frombuffer(image.read(),dtype=np.uint8).tolist()
-            fastapi_data={"title": title,"image":img_list}
-            response=requests.post("http://{host}:{port}/find",json=fastapi_data,headers={"Content-Type":"application/json"})
-            response=response.json()
-        titles=response['titles']
-        images=response['images']
+            response=requests.post(f"http://{host}:{port}/find",files={"file":image.read()},params={'title':title})
+            data=response.json()
+        titles=data['titles']
+        images=data['images']
         if titles is not None and images is not None:
-            images=list(tf.reshape(img,(512,512,3)) for img in images)
-            st.image(images, use_column_width=True, caption=titles)
+            images=[cv2.cvtColor(np.array(img,dtype=np.uint8),cv2.COLOR_BGR2RGB) for img in images]
         else:
-            st.error("We faced a issue internally. Sorry 😢")
-        
+            st.success("We don't have such duplicate")
+        if titles is not None:
+            if len(titles)>1:
+                st.success(f"we found {len(titles)} duplicates. Below are few duplicates")
+                st.image(images, use_column_width=True, caption=titles)
+            else:
+                st.success(f"we found {len(titles)} duplicate")
+                st.image(images, use_column_width=True, caption=titles)
     else:
         if title!="":
             st.error('please upload the image')
