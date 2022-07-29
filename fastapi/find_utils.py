@@ -6,7 +6,6 @@ import pickle
 import requests
 import json
 import numpy as np
-import tensorflow as tf
 from psycopg2 import sql
 from transformers import BertTokenizer
 from insert_to_db import Make_Connection

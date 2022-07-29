@@ -1,8 +1,8 @@
 [Unit]
-Description="This ervice runs the tensorflow server for cv models"
+Description="This service runs the tensorflow server for nlp models"
 After=docker.service
 [Service]
-WorkingDirectory=/home/ubuntu/cv
+WorkingDirectory=/home/ubuntu/nlp
 ExecStart= docker run -p 8502:8501 --mount type=bind,source=/home/ubuntu/nlp/nlp_models,target=/models/nlp -e MODEL_NAME=nlp -t tensorflow/serving
 [Install]
 WantedBy=multi-user.target

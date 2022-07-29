@@ -1,7 +1,7 @@
 __*__
-*.pkl
-*.jpg
+train_images/*.jpg
+test_images/*.jpg
 insert_to_s3.py
 *.csv
-*.zip
-.gitignore
+shopee-product-matching.zip
+terraform/*

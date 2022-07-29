@@ -11,11 +11,11 @@ def Make_Connection():
     while no_connect:
         try:
             conn=psycopg2.connect(
-            host="localhost",
+            host=os.environ['host'],
             password="my-password",
-            user="admin",
+            user="shopkeeper",
             port=5432,
-            database="DB",
+            database="shopdb",
             cursor_factory = RealDictCursor
             )   
             cursor = conn.cursor()
@@ -32,15 +32,14 @@ def Creator():
     CREATE TABLE IF NOT EXISTS post_info
     (id serial,
     post_names varchar(100) not null,
-    PRIMARY KEY (id,post_names)
+    PRIMARY KEY (post_names)
     );
     """)
     cursor.execute(query)
     conn.commit()
     query=sql.SQL("""
     CREATE INDEX post_index
-    on post_info(id)
-    );
+    on post_info(id);
     """)
     cursor.execute(query)
     conn.commit()

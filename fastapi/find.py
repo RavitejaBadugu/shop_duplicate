@@ -1,9 +1,13 @@
-from fastapi import FastAPI,UploadFile,File,Response
+from fastapi import FastAPI,UploadFile,File
 from find_utils import Retrive_post
 import cv2
 import numpy as np
 from fastapi.responses import JSONResponse
 app=FastAPI()
+
+@app.post("/ping")
+async def Welcome():
+    return {"msg":"working"}
 
 @app.post("/find")
 async def FIND_ME(title: str,file: UploadFile = File(...)):

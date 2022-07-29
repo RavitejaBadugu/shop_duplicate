@@ -1,5 +1,5 @@
 [Unit]
-Description="This ervice runs the tensorflow server for cv models"
+Description="This service runs the tensorflow server for cv models"
 After=docker.service
 [Service]
 WorkingDirectory=/home/ubuntu/cv
