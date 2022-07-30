@@ -18,7 +18,7 @@ After=docker.service
 ExecStart=docker run -p 8000:8000 -e cv_host=${cv_host} -e cv_port=${cv_port} -e nlp_host=${nlp_host} \
         -e nlp_port=${nlp_port}  -e knn_cv_host=${knn_cv_host} -e knn_cv_port=${knn_cv_port} \
         -e knn_nlp_host=${knn_nlp_host} -e knn_nlp_port=${knn_nlp_port} \
-        -e db_host=${db_host} -e BucketName=${bucket_name} fastapi_img
+        -e host=${db_host} -e BucketName=${bucket_name} fastapi_img
 [Install]
 WantedBy=multi-user.target
 EOF
