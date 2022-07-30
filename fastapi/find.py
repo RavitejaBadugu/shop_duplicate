@@ -5,7 +5,7 @@ import numpy as np
 from fastapi.responses import JSONResponse
 app=FastAPI()
 
-@app.post("/ping")
+@app.get("/ping")
 async def Welcome():
     return {"msg":"working"}
 
