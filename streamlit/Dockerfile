@@ -1,4 +1,5 @@
 FROM python:3.8
+RUN apt-get update && apt-get install libgl1 -y
 COPY . ~/streamlit
 WORKDIR ~/streamlit
 RUN pip install -r requirements.txt
