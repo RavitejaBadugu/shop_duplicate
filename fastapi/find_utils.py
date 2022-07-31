@@ -87,7 +87,8 @@ def FIND_SIMILAR(title,image):
     close_dis_indx=np.where(dis<CV_THRESHOLD)
     matched_post_idxs=indx[close_dis_indx]
     images_idx.extend(matched_post_idxs)
-    return list(set(title_idx).intersection(set(images_idx)))
+    return list(set(title_idx).union(set(images_idx)))
+    #return list(set(title_idx).intersection(set(images_idx)))
 
 def get_post_names(idxs):
     conn,cursor=Make_Connection()
