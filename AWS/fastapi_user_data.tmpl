@@ -1,0 +1,4 @@
+#!/bin/bash
+bash /root/service_file.sh ${albdns} 8501 ${albdns} 8502 ${albdns} 5000 ${albdns} 5002 ${db_host} shop-duplicate-bucket
+systemctl daemon-reload
+systemctl start fastapi.service

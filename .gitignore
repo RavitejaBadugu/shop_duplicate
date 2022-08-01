@@ -6,7 +6,6 @@
 __*__
 .dvc
 *.h5
-AWS
 models/cv
 models/nlp
 models/mlruns

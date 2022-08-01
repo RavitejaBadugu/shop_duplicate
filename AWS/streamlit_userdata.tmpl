@@ -1,0 +1,4 @@
+#!/bin/bash
+bash /root/service_file.sh ${nlbdns} ${port}
+systemctl daemon-reload
+systemctl start streamlit.service
