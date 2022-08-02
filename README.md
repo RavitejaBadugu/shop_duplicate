@@ -14,9 +14,10 @@ using GPUs. So, I shifted my work to TPUs. In the TPU code at the last
 you will find the experiments which I ran and what hyperparameters
 where chosen at last.
 After Training the submitted models got 0.62 Private Score(mean f1 score).
+![Screenshot 2022-08-02 221336](https://user-images.githubusercontent.com/63113063/182428743-5435fc34-f69a-4f2e-964c-65ac51b84f97.png)
+
 The deployment is done in aws where I created Infrastructure which
 includes componenets as:
-
 1) VPC
 2) Public Subnets and Private Subnets
 3) Network Load Balancers and Application Load Balancers
