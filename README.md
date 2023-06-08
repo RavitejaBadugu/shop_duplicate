@@ -29,6 +29,7 @@ includes componenets as:
 7) AWS S3
 
 
+![The AWS Architecture which I designed.](https://github.com/RavitejaBadugu/shop_duplicate/blob/new_develop/AWS/My%20first%20Arch.png)
 
 
 
